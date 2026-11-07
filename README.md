@@ -50,3 +50,7 @@ El script 03 incluye cinco consultas analíticas (historia clínica completa, ed
 ## Tecnologías
 
 PostgreSQL · PL/pgSQL · pgAdmin 4 · diagrams.net
+
+## Licencia
+
+El contenido de este repositorio (código, documentos y figuras propias) se publica bajo la licencia [Creative Commons Atribución 4.0 Internacional (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/deed.es): puede compartirse y adaptarse citando a los autores. Ver [`LICENSE`](LICENSE).
