@@ -1,27 +1,52 @@
-# Modelado y consultas SQL para sistemas de información
+# Bases de datos relacionales en PostgreSQL
 
-Portafolio académico de diseño relacional y consultas SQL aplicado a una base de datos universitaria y a una clínica veterinaria.
+Diseño e implementación de una base de datos clínica para una veterinaria (modelo conceptual en notación de Chen → esquema lógico en 3FN → DDL en PostgreSQL con reglas de integridad), más un banco de consultas SQL sobre una base universitaria. Curso *Bases de Datos I* — Maestría en Ciencia de Datos, Universidad Santo Tomás (2026).
 
-## Contenido
+**Equipo:** Adrian Grateron · Harold Rodríguez · Jhonatan Smith Doncel
 
-- `consultas_universidad.sql`: ejercicios de selección, filtros, ordenamiento y agregaciones sobre una base universitaria en PostgreSQL.
-- `Trabajo final/DiagramaFinal.drawio` y `Modelo_Relacional_Clinica_Veterinaria_Corregido_Final.drawio`: diagramas del modelo de datos de la clínica.
-- `Trabajo final/Trabajo_Clinica_Veterinaria_PostgreSQL_Final.docx` y los informes PDF/DOCX: documentación del diseño y entrega académica.
+## 1. Clínica veterinaria
 
-## Temas
+El modelo reconstruye la atención de una mascota de principio a fin:
 
-- Consultas SQL y recuperación de información.
-- Diseño de entidades, relaciones y modelo relacional.
-- Aplicación del esquema a un caso de clínica veterinaria.
+```
+DUEÑO → MASCOTA → CITA → DIAGNÓSTICO → PRESCRIPCIÓN → MEDICAMENTO
+                MASCOTA → REGISTRO_VACUNACIÓN → VACUNA
+```
 
-## Uso
+**Decisiones de diseño**
 
-Abre los archivos `.drawio` con diagrams.net. Ejecuta `consultas_universidad.sql` en PostgreSQL después de crear o cargar el esquema y los datos requeridos por las tablas. El directorio no incluye un volcado de base de datos ni un script completo de creación del esquema, por lo que las consultas requieren esas tablas previamente disponibles.
+- 10 tablas en **Tercera Forma Normal**; teléfonos del dueño como atributo multivaluado en `dueno_telefono`.
+- `prescripcion` y `registro_vacunacion` son **entidades débiles** con claves compuestas.
+- Relación CITA–DIAGNÓSTICO 1:0..1 implementada con FK + `UNIQUE (id_cita)`.
+- La edad de la mascota es un **atributo derivado**: no se almacena, se calcula desde `fecha_nacimiento`.
+- Integridad con `PRIMARY KEY`, `FOREIGN KEY` (`RESTRICT`/`CASCADE` según el caso), `CHECK` de dominio, índices sobre FK y dos **triggers** PL/pgSQL:
+  - impide registrar una vacuna aplicada después de su fecha de vencimiento;
+  - impide emitir una prescripción con fecha anterior a la cita.
 
-## Estado
+**Ejecución** (PostgreSQL 13+; probado en PostgreSQL 16):
 
-Material académico reunido en una carpeta; no se presenta como sistema desplegado ni como aplicación de producción. Los documentos originales se conservan en español.
+```bash
+psql -d tu_base -f sql/01_clinica_veterinaria_ddl.sql   # crea el esquema clinica_veterinaria
+psql -d tu_base -f sql/02_datos_prueba.sql              # datos ficticios
+psql -d tu_base -f sql/03_consultas_validacion.sql       # consultas + pruebas de integridad
+```
 
-## Licencia y atribución
+El script 03 incluye cinco consultas analíticas (historia clínica completa, edad derivada, historial de vacunación, carga por veterinario, medicamentos más formulados) y cinco **pruebas negativas** que deben fallar: diagnóstico duplicado, vacuna vencida, prescripción anterior a la cita, borrado de un dueño con mascotas y valor de sexo fuera de dominio. Al ejecutarlo se obtienen cinco mensajes `OK`.
 
-No se encontró una licencia explícita en los archivos. Antes de publicar, confirma los permisos de los documentos de curso y acuerda con los coautores cualquier material realizado en equipo.
+| Archivo | Contenido |
+|---|---|
+| `sql/01_clinica_veterinaria_ddl.sql` | DDL completo: tablas, restricciones, índices y triggers |
+| `sql/02_datos_prueba.sql` | Datos de prueba ficticios |
+| `sql/03_consultas_validacion.sql` | Consultas y pruebas de integridad |
+| `Trabajo final/*.drawio` | Diagrama entidad-relación (Chen) y modelo relacional; se abren en [diagrams.net](https://app.diagrams.net) |
+| `Trabajo final/Trabajo_Clinica_Veterinaria_PostgreSQL_Final.docx` | Documento final: reglas de negocio, normalización y justificación |
+
+**Limitaciones conocidas.** El documento establece que solo una cita *atendida* produce diagnóstico; el esquema garantiza como máximo un diagnóstico por cita, pero no valida el estado de la cita (podría añadirse un tercer trigger). Los `CHECK` con `CURRENT_DATE` se evalúan solo al insertar o actualizar.
+
+## 2. Consultas sobre una base universitaria
+
+`consultas_universidad.sql` resuelve 10 ejercicios de selección, filtrado, ordenamiento, agregación y uniones sobre las tablas `estudiantes`, `cursos`, `profesores` e `inscripciones`. El script de creación de esa base (`universidad_db.sql`) fue entregado por el curso y no se incluye aquí, por lo que las consultas requieren tener ese esquema cargado previamente.
+
+## Tecnologías
+
+PostgreSQL · PL/pgSQL · pgAdmin 4 · diagrams.net
