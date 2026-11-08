@@ -21,6 +21,17 @@ DUEÑO → MASCOTA → CITA → DIAGNÓSTICO → PRESCRIPCIÓN → MEDICAMENTO
 
 ![Modelo relacional normalizado de la clínica veterinaria](docs/modelo_relacional_3fn.png)
 
+<details>
+<summary><b>Versión ampliada (propuesta conceptual, no implementada en el DDL)</b></summary>
+
+El archivo de diagramas incluye una extensión modular para una operación clínica real: clientes con varios contactos, especies y razas, especialidades del veterinario, consultas separadas de las citas, mediciones clínicas, catálogo de diagnósticos y alergias. Es una propuesta de crecimiento; los scripts SQL de este repositorio implementan el modelo de 10 tablas mostrado arriba.
+
+![Modelo conceptual ampliado](docs/diagrama_er_ampliado.png)
+
+![Esquema relacional ampliado](docs/esquema_relacional_ampliado.png)
+
+</details>
+
 **Decisiones de diseño**
 
 - 10 tablas en **Tercera Forma Normal**; teléfonos del dueño como atributo multivaluado en `dueno_telefono`.
@@ -47,9 +58,10 @@ El script 03 incluye cinco consultas analíticas (historia clínica completa, ed
 | `sql/02_datos_prueba.sql` | Datos de prueba ficticios |
 | `sql/03_consultas_validacion.sql` | Consultas y pruebas de integridad |
 | `docs/informe_clinica_veterinaria.pdf` | Documento final: reglas de negocio, normalización y justificación (se lee directo en GitHub) |
-| `docs/*.png` | Diagrama entidad-relación y modelo relacional en imagen |
-| `Trabajo final/*.drawio` | Fuentes editables de los diagramas (incluye una versión ampliada); se abren en [diagrams.net](https://app.diagrams.net) |
-| `Trabajo final/*.docx` | Documento final en Word (editable) |
+| `docs/*.png` | Diagramas en imagen: modelo implementado y versión ampliada |
+| `Trabajo final/*.drawio` | Fuentes editables de todos los diagramas; se abren en [diagrams.net](https://app.diagrams.net) |
+| `Trabajo final/Trabajo_Clinica_Veterinaria_PostgreSQL_Final.docx` | Documento final en Word (editable) |
+| `Trabajo_Clinica_Veterinaria.docx` | Borrador previo del documento |
 | `Informe final Bases de datos 1.pdf` | Informe de las consultas sobre la base universitaria |
 
 **Limitaciones conocidas.** El documento establece que solo una cita *atendida* produce diagnóstico; el esquema garantiza como máximo un diagnóstico por cita, pero no valida el estado de la cita (podría añadirse un tercer trigger). Los `CHECK` con `CURRENT_DATE` se evalúan solo al insertar o actualizar.
