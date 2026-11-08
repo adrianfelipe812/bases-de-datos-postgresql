@@ -13,6 +13,10 @@ OWNER → PET → APPOINTMENT → DIAGNOSIS → PRESCRIPTION → MEDICATION
            PET → VACCINATION RECORD → VACCINE
 ```
 
+![Entity-relationship diagram (Chen notation)](docs/diagrama_er_chen.png)
+
+![Relational model in 3NF](docs/modelo_relacional_3fn.png)
+
 - 10 tables in 3NF; owner phone numbers modeled as a multivalued attribute.
 - Weak entities (`prescripcion`, `registro_vacunacion`) with composite keys.
 - 1:0..1 appointment–diagnosis relationship enforced with FK + `UNIQUE`.
@@ -30,6 +34,8 @@ psql -d your_db -f sql/03_consultas_validacion.sql       # queries + integrity t
 Script 03 runs five analytical queries and five **negative tests** that must fail (duplicate diagnosis, expired vaccine, prescription before appointment, deleting an owner with pets, invalid domain value). All five print `OK`.
 
 **Known limitation:** the schema allows at most one diagnosis per appointment but does not check that the appointment status is *attended*.
+
+Full report (Spanish): [`docs/informe_clinica_veterinaria.pdf`](docs/informe_clinica_veterinaria.pdf)
 
 ## University queries
 
