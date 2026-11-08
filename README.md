@@ -13,6 +13,14 @@ DUEÑO → MASCOTA → CITA → DIAGNÓSTICO → PRESCRIPCIÓN → MEDICAMENTO
                 MASCOTA → REGISTRO_VACUNACIÓN → VACUNA
 ```
 
+### Diagrama entidad-relación (Chen)
+
+![Diagrama entidad-relación de la clínica veterinaria en notación de Chen](docs/diagrama_er_chen.png)
+
+### Modelo relacional en 3FN
+
+![Modelo relacional normalizado de la clínica veterinaria](docs/modelo_relacional_3fn.png)
+
 **Decisiones de diseño**
 
 - 10 tablas en **Tercera Forma Normal**; teléfonos del dueño como atributo multivaluado en `dueno_telefono`.
@@ -38,8 +46,11 @@ El script 03 incluye cinco consultas analíticas (historia clínica completa, ed
 | `sql/01_clinica_veterinaria_ddl.sql` | DDL completo: tablas, restricciones, índices y triggers |
 | `sql/02_datos_prueba.sql` | Datos de prueba ficticios |
 | `sql/03_consultas_validacion.sql` | Consultas y pruebas de integridad |
-| `Trabajo final/*.drawio` | Diagrama entidad-relación (Chen) y modelo relacional; se abren en [diagrams.net](https://app.diagrams.net) |
-| `Trabajo final/Trabajo_Clinica_Veterinaria_PostgreSQL_Final.docx` | Documento final: reglas de negocio, normalización y justificación |
+| `docs/informe_clinica_veterinaria.pdf` | Documento final: reglas de negocio, normalización y justificación (se lee directo en GitHub) |
+| `docs/*.png` | Diagrama entidad-relación y modelo relacional en imagen |
+| `Trabajo final/*.drawio` | Fuentes editables de los diagramas (incluye una versión ampliada); se abren en [diagrams.net](https://app.diagrams.net) |
+| `Trabajo final/*.docx` | Documento final en Word (editable) |
+| `Informe final Bases de datos 1.pdf` | Informe de las consultas sobre la base universitaria |
 
 **Limitaciones conocidas.** El documento establece que solo una cita *atendida* produce diagnóstico; el esquema garantiza como máximo un diagnóstico por cita, pero no valida el estado de la cita (podría añadirse un tercer trigger). Los `CHECK` con `CURRENT_DATE` se evalúan solo al insertar o actualizar.
 
